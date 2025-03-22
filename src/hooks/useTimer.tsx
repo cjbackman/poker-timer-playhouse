@@ -1,0 +1,193 @@
+
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { playBlindChangeSound, playTimerEndSound } from '@/lib/audio';
+
+export interface TimerOptions {
+  initialTime: number;        // Initial time in seconds
+  interval?: number;          // Update interval in milliseconds
+  autoStart?: boolean;        // Whether to start the timer automatically
+  onTick?: (timeRemaining: number) => void;  // Callback on each tick
+  onComplete?: () => void;    // Callback when timer reaches zero
+  onTimeChange?: (newTime: number) => void;  // Callback when time is changed
+}
+
+export const useTimer = ({
+  initialTime,
+  interval = 1000,
+  autoStart = false,
+  onTick,
+  onComplete,
+  onTimeChange,
+}: TimerOptions) => {
+  const [timeRemaining, setTimeRemaining] = useState<number>(initialTime);
+  const [isRunning, setIsRunning] = useState<boolean>(autoStart);
+  const [isComplete, setIsComplete] = useState<boolean>(false);
+  const [isPaused, setIsPaused] = useState<boolean>(!autoStart);
+  
+  // Use refs to avoid stale closures in useEffect
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const timeRemainingRef = useRef<number>(initialTime);
+  const isRunningRef = useRef<boolean>(autoStart);
+  const callbackRef = useRef({ onTick, onComplete, onTimeChange });
+  
+  // Update callback refs when they change
+  useEffect(() => {
+    callbackRef.current = { onTick, onComplete, onTimeChange };
+  }, [onTick, onComplete, onTimeChange]);
+  
+  // Timer setup and cleanup
+  useEffect(() => {
+    // Clear interval on unmount
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, []);
+  
+  // Effect to start/stop timer when isRunning changes
+  useEffect(() => {
+    if (isRunning) {
+      // Clear any existing interval
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+      
+      // Set the start time and last tick time
+      const startTime = Date.now();
+      let lastTickTime = startTime;
+      
+      // Create a new interval
+      intervalRef.current = setInterval(() => {
+        const now = Date.now();
+        const deltaTime = Math.floor((now - lastTickTime) / 1000);
+        lastTickTime = now;
+        
+        if (deltaTime > 0) {
+          timeRemainingRef.current = Math.max(0, timeRemainingRef.current - deltaTime);
+          setTimeRemaining(timeRemainingRef.current);
+          
+          // Call onTick callback
+          if (callbackRef.current.onTick) {
+            callbackRef.current.onTick(timeRemainingRef.current);
+          }
+          
+          // Check if timer is complete
+          if (timeRemainingRef.current === 0) {
+            // Stop the timer
+            setIsRunning(false);
+            isRunningRef.current = false;
+            setIsComplete(true);
+            
+            if (intervalRef.current) {
+              clearInterval(intervalRef.current);
+              intervalRef.current = null;
+            }
+            
+            // Play sound when timer completes
+            playTimerEndSound();
+            
+            // Call onComplete callback
+            if (callbackRef.current.onComplete) {
+              callbackRef.current.onComplete();
+            }
+          }
+        }
+      }, interval);
+    } else if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    
+    isRunningRef.current = isRunning;
+  }, [isRunning, interval]);
+  
+  // Effect to update timeRemaining when initialTime changes
+  useEffect(() => {
+    setTimeRemaining(initialTime);
+    timeRemainingRef.current = initialTime;
+    setIsComplete(false);
+    
+    // Call onTimeChange callback
+    if (callbackRef.current.onTimeChange) {
+      callbackRef.current.onTimeChange(initialTime);
+    }
+  }, [initialTime]);
+  
+  // Start the timer
+  const start = useCallback(() => {
+    if (!isRunningRef.current && timeRemainingRef.current > 0) {
+      setIsRunning(true);
+      setIsPaused(false);
+      setIsComplete(false);
+    }
+  }, []);
+  
+  // Pause the timer
+  const pause = useCallback(() => {
+    if (isRunningRef.current) {
+      setIsRunning(false);
+      setIsPaused(true);
+    }
+  }, []);
+  
+  // Resume the timer
+  const resume = useCallback(() => {
+    if (!isRunningRef.current && !isComplete && isPaused) {
+      setIsRunning(true);
+      setIsPaused(false);
+    }
+  }, [isComplete, isPaused]);
+  
+  // Reset the timer
+  const reset = useCallback((newTime?: number) => {
+    const resetTime = newTime !== undefined ? newTime : initialTime;
+    setIsRunning(false);
+    setIsPaused(true);
+    setIsComplete(false);
+    setTimeRemaining(resetTime);
+    timeRemainingRef.current = resetTime;
+    
+    // Call onTimeChange callback
+    if (callbackRef.current.onTimeChange) {
+      callbackRef.current.onTimeChange(resetTime);
+    }
+  }, [initialTime]);
+  
+  // Add time to the timer
+  const addTime = useCallback((seconds: number) => {
+    const newTime = timeRemainingRef.current + seconds;
+    setTimeRemaining(newTime);
+    timeRemainingRef.current = newTime;
+    
+    if (newTime > 0 && isComplete) {
+      setIsComplete(false);
+    }
+    
+    // Call onTimeChange callback
+    if (callbackRef.current.onTimeChange) {
+      callbackRef.current.onTimeChange(newTime);
+    }
+  }, [isComplete]);
+  
+  // Format seconds to MM:SS
+  const formatTime = useCallback((seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+  }, []);
+  
+  return {
+    timeRemaining,
+    isRunning,
+    isPaused,
+    isComplete,
+    start,
+    pause,
+    resume,
+    reset,
+    addTime,
+    formatTime,
+  };
+};
