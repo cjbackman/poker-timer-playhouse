@@ -30,10 +30,10 @@ const Timer = () => {
   const isNearEnd = timer.timeRemaining < currentLevel.duration * 0.1 && timer.timeRemaining > 0;
   
   return (
-    <div className="flex flex-col items-center justify-center gap-8">
-      {/* Timer Display */}
+    <div className="flex flex-col items-center justify-center gap-10">
+      {/* Timer Display - Much Larger */}
       <div 
-        className={`text-6xl md:text-8xl font-mono tracking-tight transition-all duration-300 ease-in-out
+        className={`text-8xl md:text-[10rem] xl:text-[12rem] font-mono tracking-tight transition-all duration-300 ease-in-out
           ${animate ? 'scale-105 text-primary' : 'scale-100'} 
           ${isNearEnd ? 'text-poker-red' : 'text-foreground'}`}
       >
@@ -46,27 +46,27 @@ const Timer = () => {
         </span>
       </div>
       
-      {/* Timer Controls */}
-      <div className="flex gap-3 items-center">
+      {/* Timer Controls - Larger and more spaced */}
+      <div className="flex gap-5 items-center">
         {/* Play/Pause Button */}
         {timer.isRunning ? (
           <Button 
             variant="outline" 
             size="lg" 
-            className="h-14 w-14 rounded-full shadow-button hover:shadow-button-hover transition-all duration-300 border-2"
+            className="h-16 w-16 rounded-full shadow-button hover:shadow-button-hover transition-all duration-300 border-2"
             onClick={() => {
               timer.pause();
               playButtonClickSound();
             }}
           >
-            <Pause className="h-6 w-6" />
+            <Pause className="h-8 w-8" />
             <span className="sr-only">Pause</span>
           </Button>
         ) : (
           <Button 
             variant="default" 
             size="lg" 
-            className="h-14 w-14 rounded-full shadow-button hover:shadow-button-hover transition-all duration-300 bg-poker-accent hover:bg-poker-accent/90 border-2 border-poker-accent/20"
+            className="h-16 w-16 rounded-full shadow-button hover:shadow-button-hover transition-all duration-300 bg-poker-accent hover:bg-poker-accent/90 border-2 border-poker-accent/20"
             onClick={() => {
               if (timer.isPaused) {
                 timer.resume();
@@ -76,7 +76,7 @@ const Timer = () => {
               playButtonClickSound();
             }}
           >
-            <Play className="h-6 w-6 ml-1" />
+            <Play className="h-8 w-8 ml-1" />
             <span className="sr-only">Play</span>
           </Button>
         )}
@@ -85,14 +85,14 @@ const Timer = () => {
         <Button 
           variant="outline" 
           size="lg"
-          className="h-14 px-4 rounded-full shadow-button hover:shadow-button-hover transition-all duration-300"
+          className="h-16 px-6 rounded-full shadow-button hover:shadow-button-hover transition-all duration-300"
           onClick={() => {
             advanceToNextLevel();
             playButtonClickSound();
           }}
           disabled={!nextLevel}
         >
-          <SkipForward className="h-5 w-5 mr-2" />
+          <SkipForward className="h-6 w-6 mr-2" />
           <span className="hidden sm:inline">Next Level</span>
         </Button>
         
@@ -100,13 +100,13 @@ const Timer = () => {
         <Button 
           variant="outline" 
           size="lg" 
-          className="h-14 w-14 rounded-full shadow-button hover:shadow-button-hover transition-all duration-300"
+          className="h-16 w-16 rounded-full shadow-button hover:shadow-button-hover transition-all duration-300"
           onClick={() => {
             resetTournament();
             playButtonClickSound();
           }}
         >
-          <RefreshCw className="h-5 w-5" />
+          <RefreshCw className="h-6 w-6" />
           <span className="sr-only">Reset</span>
         </Button>
       </div>
