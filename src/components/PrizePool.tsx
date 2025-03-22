@@ -14,7 +14,7 @@ const PrizePool = () => {
   };
   
   return (
-    <div className="glass p-6 rounded-2xl flex flex-col">
+    <div className="glass p-6 rounded-2xl h-full flex flex-col">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">Prize Pool</h2>
         <Trophy className="h-5 w-5 text-poker-gold" />

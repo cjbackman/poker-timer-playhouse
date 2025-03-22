@@ -30,10 +30,10 @@ const Timer = () => {
   const isNearEnd = timer.timeRemaining < currentLevel.duration * 0.1 && timer.timeRemaining > 0;
   
   return (
-    <div className="flex flex-col items-center justify-center gap-10">
-      {/* Timer Display - Much Larger */}
+    <div className="flex flex-col items-center justify-center gap-10 h-full">
+      {/* Timer Display - Even Larger for the new layout */}
       <div 
-        className={`text-8xl md:text-[10rem] xl:text-[12rem] font-mono tracking-tight transition-all duration-300 ease-in-out
+        className={`text-8xl md:text-[12rem] xl:text-[14rem] font-mono tracking-tight transition-all duration-300 ease-in-out
           ${animate ? 'scale-105 text-primary' : 'scale-100'} 
           ${isNearEnd ? 'text-poker-red' : 'text-foreground'}`}
       >

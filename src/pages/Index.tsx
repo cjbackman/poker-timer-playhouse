@@ -35,24 +35,27 @@ const PokerClock = () => {
   return (
     <TournamentProvider>
       <Layout>
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8">
-          {/* Timer and Blind Display - Center (made much larger) */}
-          <div className="md:col-span-8 order-1 md:order-2 flex flex-col items-center justify-center gap-8">
-            <div className="glass rounded-3xl p-6 md:p-10 w-full max-w-3xl mx-auto shadow-lg">
-              <Timer />
-            </div>
-            
-            <div className="w-full max-w-2xl mx-auto">
-              <BlindDisplay />
-            </div>
+        {/* Timer - Top Half */}
+        <div className="mb-8 h-[45vh]">
+          <div className="glass rounded-3xl p-6 md:p-10 w-full h-full flex items-center justify-center shadow-lg">
+            <Timer />
           </div>
-          
-          {/* Side panels - made wider but height limited to content */}
-          <div className="md:col-span-2 order-3 md:order-1 h-auto">
+        </div>
+        
+        {/* Bottom Half - Three Columns */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[35vh]">
+          {/* Prize Pool - Left */}
+          <div className="h-full">
             <PrizePool />
           </div>
           
-          <div className="md:col-span-2 order-2 md:order-3 h-auto">
+          {/* Blinds - Middle */}
+          <div className="h-full flex items-center justify-center">
+            <BlindDisplay />
+          </div>
+          
+          {/* Buy-ins and Rebuys - Right */}
+          <div className="h-full">
             <BuyInsPanel />
           </div>
         </div>

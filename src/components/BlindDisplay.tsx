@@ -24,10 +24,10 @@ const BlindDisplay = () => {
   }, [isBlindChangeAlert]);
   
   return (
-    <div className="flex flex-col space-y-6 items-center">
+    <div className="flex flex-col space-y-6 items-center h-full justify-center">
       {/* Current Blinds */}
       <div 
-        className={`glass p-6 rounded-2xl transition-all duration-300 transform
+        className={`glass p-6 rounded-2xl transition-all duration-300 transform w-full
           ${isBlindChangeAlert ? 'animate-pulse-alert scale-105 bg-poker-red/10 border-poker-red/30' : ''}
         `}
       >
@@ -44,7 +44,7 @@ const BlindDisplay = () => {
       
       {/* Next Blinds */}
       {nextLevel && (
-        <div className="glass p-4 rounded-xl transition-all duration-300">
+        <div className="glass p-4 rounded-xl transition-all duration-300 w-full">
           <div className="text-xs uppercase tracking-wide text-muted-foreground mb-1">Next Level</div>
           <div className="text-2xl md:text-3xl font-medium">
             {currency}{nextLevel.smallBlind} / {currency}{nextLevel.bigBlind}

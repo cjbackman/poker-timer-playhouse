@@ -112,7 +112,7 @@ const BuyInsPanel = () => {
       </div>
       
       {/* Quick Actions */}
-      <div className="mt-6 flex items-center justify-end">
+      <div className="mt-auto flex items-center justify-end">
         <Button 
           variant="ghost" 
           size="sm" 
