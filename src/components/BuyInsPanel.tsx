@@ -14,7 +14,7 @@ const BuyInsPanel = () => {
   } = useTournament();
   
   const { buyIns, reBuys } = tournament;
-  const { buyInAmount, reBuyAmount, currency } = tournament.settings;
+  const { buyInAmount, reBuyAmount } = tournament.settings;
   
   return (
     <div className="glass p-6 rounded-2xl h-full flex flex-col">
@@ -27,7 +27,7 @@ const BuyInsPanel = () => {
         {/* Buy-ins */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <div className="text-sm text-muted-foreground">Buy-ins ({currency}{buyInAmount})</div>
+            <div className="text-sm text-muted-foreground">Buy-ins ({buyInAmount})</div>
             <div className="flex items-center gap-2">
               <Button 
                 variant="outline" 
@@ -63,14 +63,14 @@ const BuyInsPanel = () => {
           </div>
           
           <div className="text-sm">
-            Total: {currency}{buyIns * buyInAmount}
+            Total: {buyIns * buyInAmount}
           </div>
         </div>
         
         {/* Rebuys */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <div className="text-sm text-muted-foreground">Rebuys ({currency}{reBuyAmount})</div>
+            <div className="text-sm text-muted-foreground">Rebuys ({reBuyAmount})</div>
             <div className="flex items-center gap-2">
               <Button 
                 variant="outline" 
@@ -106,7 +106,7 @@ const BuyInsPanel = () => {
           </div>
           
           <div className="text-sm">
-            Total: {currency}{reBuys * reBuyAmount}
+            Total: {reBuys * reBuyAmount}
           </div>
         </div>
       </div>

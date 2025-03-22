@@ -4,13 +4,12 @@ import { Trophy } from 'lucide-react';
 
 const PrizePool = () => {
   const { tournament, prizePool, prizes } = useTournament();
-  const { currency } = tournament.settings;
   
-  // Format currency with 2 decimal places if needed
-  const formatCurrency = (amount: number) => {
+  // Format amount without currency
+  const formatAmount = (amount: number) => {
     return Number.isInteger(amount) 
-      ? `${currency}${amount}` 
-      : `${currency}${amount.toFixed(2)}`;
+      ? `${amount}` 
+      : `${amount.toFixed(2)}`;
   };
   
   return (
@@ -24,7 +23,7 @@ const PrizePool = () => {
       <div className="mb-5">
         <div className="text-sm text-muted-foreground mb-1">Total</div>
         <div className="text-3xl md:text-4xl font-semibold">
-          {formatCurrency(prizePool)}
+          {formatAmount(prizePool)}
         </div>
       </div>
       
@@ -32,17 +31,17 @@ const PrizePool = () => {
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div className="prize-badge prize-badge-1st">1st Place</div>
-          <div className="text-xl font-medium">{formatCurrency(prizes.first)}</div>
+          <div className="text-xl font-medium">{formatAmount(prizes.first)}</div>
         </div>
         
         <div className="flex items-center justify-between">
           <div className="prize-badge prize-badge-2nd">2nd Place</div>
-          <div className="text-xl font-medium">{formatCurrency(prizes.second)}</div>
+          <div className="text-xl font-medium">{formatAmount(prizes.second)}</div>
         </div>
         
         <div className="flex items-center justify-between">
           <div className="prize-badge prize-badge-3rd">3rd Place</div>
-          <div className="text-xl font-medium">{formatCurrency(prizes.third)}</div>
+          <div className="text-xl font-medium">{formatAmount(prizes.third)}</div>
         </div>
       </div>
     </div>

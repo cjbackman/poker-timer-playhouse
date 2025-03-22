@@ -4,7 +4,6 @@ import { useTournament } from '@/hooks/useTournament';
 
 const BlindDisplay = () => {
   const { tournament, currentLevel, nextLevel } = useTournament();
-  const { currency } = tournament.settings;
   const { isBlindChangeAlert } = tournament;
   
   // Animation states
@@ -33,11 +32,11 @@ const BlindDisplay = () => {
       >
         <div className="text-sm uppercase tracking-wide text-muted-foreground mb-2">Current Blinds</div>
         <div className="text-4xl md:text-5xl font-semibold">
-          {currency}{currentLevel.smallBlind} / {currency}{currentLevel.bigBlind}
+          {currentLevel.smallBlind} / {currentLevel.bigBlind}
         </div>
         {currentLevel.ante > 0 && (
           <div className="text-sm mt-2 text-muted-foreground">
-            Ante: {currency}{currentLevel.ante}
+            Ante: {currentLevel.ante}
           </div>
         )}
       </div>
@@ -47,11 +46,11 @@ const BlindDisplay = () => {
         <div className="glass p-4 rounded-xl transition-all duration-300 w-full">
           <div className="text-xs uppercase tracking-wide text-muted-foreground mb-1">Next Level</div>
           <div className="text-2xl md:text-3xl font-medium">
-            {currency}{nextLevel.smallBlind} / {currency}{nextLevel.bigBlind}
+            {nextLevel.smallBlind} / {nextLevel.bigBlind}
           </div>
           {nextLevel.ante > 0 && (
             <div className="text-xs mt-1 text-muted-foreground">
-              Ante: {currency}{nextLevel.ante}
+              Ante: {nextLevel.ante}
             </div>
           )}
         </div>
