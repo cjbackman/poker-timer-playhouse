@@ -58,6 +58,12 @@ export interface TournamentContextValue {
   
   // Prize distribution
   updatePrizeDistribution: (distribution: Partial<PrizeDistribution>) => void;
+  
+  // Custom blind structure management
+  updateCustomBlindStructure: (levels: BlindLevel[]) => void;
+  addBlindLevel: (level: BlindLevel) => void;
+  removeBlindLevel: (levelId: number) => void;
+  updateBlindLevel: (levelId: number, field: keyof BlindLevel, value: number) => void;
 }
 
 // Default settings
@@ -179,6 +185,94 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [timer]);
   
+  // Custom blind structure management
+  const updateCustomBlindStructure = useCallback((levels: BlindLevel[]) => {
+    setTournament((prev) => ({
+      ...prev,
+      settings: {
+        ...prev.settings,
+        blindStructure: {
+          ...prev.settings.blindStructure,
+          levels,
+        },
+      },
+    }));
+  }, []);
+  
+  // Add a new blind level
+  const addBlindLevel = useCallback((level: BlindLevel) => {
+    setTournament((prev) => {
+      const updatedLevels = [...prev.settings.blindStructure.levels, level];
+      // Sort levels by ID to ensure they appear in order
+      updatedLevels.sort((a, b) => a.id - b.id);
+      
+      return {
+        ...prev,
+        settings: {
+          ...prev.settings,
+          blindStructure: {
+            ...prev.settings.blindStructure,
+            levels: updatedLevels,
+          },
+        },
+      };
+    });
+  }, []);
+  
+  // Remove a blind level
+  const removeBlindLevel = useCallback((levelId: number) => {
+    setTournament((prev) => {
+      // Don't remove if it's the only level or if it's the current level
+      if (
+        prev.settings.blindStructure.levels.length <= 1 ||
+        levelId === prev.currentLevelId
+      ) {
+        return prev;
+      }
+      
+      const updatedLevels = prev.settings.blindStructure.levels.filter(
+        (level) => level.id !== levelId
+      );
+      
+      return {
+        ...prev,
+        settings: {
+          ...prev.settings,
+          blindStructure: {
+            ...prev.settings.blindStructure,
+            levels: updatedLevels,
+          },
+        },
+      };
+    });
+  }, []);
+  
+  // Update a specific blind level field
+  const updateBlindLevel = useCallback((levelId: number, field: keyof BlindLevel, value: number) => {
+    setTournament((prev) => {
+      const updatedLevels = prev.settings.blindStructure.levels.map((level) => {
+        if (level.id === levelId) {
+          return {
+            ...level,
+            [field]: value,
+          };
+        }
+        return level;
+      });
+      
+      return {
+        ...prev,
+        settings: {
+          ...prev.settings,
+          blindStructure: {
+            ...prev.settings.blindStructure,
+            levels: updatedLevels,
+          },
+        },
+      };
+    });
+  }, []);
+  
   // Add a buy-in
   const addBuyIn = useCallback(() => {
     setTournament((prev) => ({ ...prev, buyIns: prev.buyIns + 1 }));
@@ -298,6 +392,10 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
     toggleSettingsPanel,
     dismissAlert,
     updatePrizeDistribution,
+    updateCustomBlindStructure,
+    addBlindLevel,
+    removeBlindLevel,
+    updateBlindLevel,
   };
   
   return (

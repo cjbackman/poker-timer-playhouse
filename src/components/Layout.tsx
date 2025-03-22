@@ -11,9 +11,9 @@ const Layout = ({ children }: LayoutProps) => {
   const { tournament } = useTournament();
   
   return (
-    <div className="min-h-screen w-full flex flex-col bg-background bg-poker-pattern">
+    <div className="min-h-screen w-full flex flex-col bg-white">
       {/* Header with title */}
-      <header className="w-full py-4 px-6 border-b sticky top-0 bg-background/80 backdrop-blur-sm z-10">
+      <header className="w-full py-4 px-6 border-b sticky top-0 bg-white/80 backdrop-blur-sm z-10">
         <TournamentTitle />
       </header>
       

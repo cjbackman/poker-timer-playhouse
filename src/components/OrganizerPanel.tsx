@@ -1,14 +1,12 @@
 
 import { useState } from 'react';
 import { useTournament } from '@/hooks/useTournament';
-import { Settings, X, ChevronRight, ChevronDown, Percent, DollarSign } from 'lucide-react';
+import { Settings, X, ChevronRight, ChevronDown, Percent, DollarSign, Plus, Trash } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Switch } from '@/components/ui/switch';
-import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Separator } from '@/components/ui/separator';
 import { blindStructures } from '@/lib/blindStructures';
@@ -20,14 +18,17 @@ const OrganizerPanel = () => {
     updateSettings, 
     updateBlindStructure, 
     updatePrizeDistribution, 
-    toggleSettingsPanel 
+    toggleSettingsPanel,
+    updateCustomBlindStructure,
+    addBlindLevel,
+    removeBlindLevel,
+    updateBlindLevel
   } = useTournament();
   
   const { settings, isPanelOpen } = tournament;
   const { buyInAmount, reBuyAmount, currency, prizeDistribution } = settings;
   
   // Local state for form fields
-  const [localCurrency, setLocalCurrency] = useState(currency);
   const [localBuyInAmount, setLocalBuyInAmount] = useState(buyInAmount.toString());
   const [localReBuyAmount, setLocalReBuyAmount] = useState(reBuyAmount.toString());
   const [expandedSections, setExpandedSections] = useState({
@@ -53,7 +54,6 @@ const OrganizerPanel = () => {
     updateSettings({
       buyInAmount: newBuyInAmount > 0 ? newBuyInAmount : 1,
       reBuyAmount: newReBuyAmount > 0 ? newReBuyAmount : 1,
-      currency: localCurrency || '$',
     });
     
     playButtonClickSound();
@@ -63,6 +63,32 @@ const OrganizerPanel = () => {
   const handlePrizeDistributionTypeChange = (type: 'percentage' | 'fixed') => {
     updatePrizeDistribution({ type });
     playButtonClickSound();
+  };
+  
+  // Handle adding a new blind level
+  const handleAddBlindLevel = () => {
+    const lastLevel = tournament.settings.blindStructure.levels[tournament.settings.blindStructure.levels.length - 1];
+    const newLevel = {
+      id: lastLevel.id + 1,
+      smallBlind: lastLevel.smallBlind * 2,
+      bigBlind: lastLevel.bigBlind * 2,
+      ante: lastLevel.ante > 0 ? lastLevel.ante * 2 : 0,
+      duration: lastLevel.duration
+    };
+    
+    addBlindLevel(newLevel);
+    playButtonClickSound();
+  };
+  
+  // Handle removing a blind level
+  const handleRemoveBlindLevel = (levelId: number) => {
+    removeBlindLevel(levelId);
+    playButtonClickSound();
+  };
+  
+  // Handle updating a blind level
+  const handleUpdateBlindLevel = (levelId: number, field: 'smallBlind' | 'bigBlind' | 'ante' | 'duration', value: number) => {
+    updateBlindLevel(levelId, field, value);
   };
   
   if (!isPanelOpen) {
@@ -111,26 +137,6 @@ const OrganizerPanel = () => {
             
             {expandedSections.buyins && (
               <div className="space-y-4 pt-2 pl-2">
-                <div className="space-y-2">
-                  <Label htmlFor="currency">Currency Symbol</Label>
-                  <Select 
-                    value={localCurrency} 
-                    onValueChange={setLocalCurrency}
-                  >
-                    <SelectTrigger id="currency" className="w-full">
-                      <SelectValue placeholder="Select currency" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="$">$ (Dollar)</SelectItem>
-                      <SelectItem value="€">€ (Euro)</SelectItem>
-                      <SelectItem value="£">£ (Pound)</SelectItem>
-                      <SelectItem value="¥">¥ (Yen)</SelectItem>
-                      <SelectItem value="₹">₹ (Rupee)</SelectItem>
-                      <SelectItem value="none">None</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
                 <div className="space-y-2">
                   <Label htmlFor="buy-in-amount">Buy-in Amount</Label>
                   <div className="flex gap-2 items-center">
@@ -204,6 +210,89 @@ const OrganizerPanel = () => {
                     </RadioGroup>
                   </div>
                 </div>
+                
+                <Separator />
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <Label>Custom Blind Levels</Label>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={handleAddBlindLevel}
+                      className="h-8 gap-1"
+                    >
+                      <Plus className="h-3.5 w-3.5" />
+                      Add Level
+                    </Button>
+                  </div>
+                  
+                  <div className="space-y-4 mt-4 max-h-60 overflow-y-auto pr-2">
+                    {tournament.settings.blindStructure.levels.map((level) => (
+                      <div key={level.id} className="grid grid-cols-12 gap-2 items-center border p-3 rounded-md relative">
+                        <div className="col-span-3 flex flex-col">
+                          <Label htmlFor={`small-blind-${level.id}`} className="text-xs mb-1">Small</Label>
+                          <Input
+                            id={`small-blind-${level.id}`}
+                            type="number"
+                            min="1"
+                            value={level.smallBlind}
+                            onChange={(e) => handleUpdateBlindLevel(level.id, 'smallBlind', parseInt(e.target.value) || 0)}
+                            className="h-8 text-sm"
+                          />
+                        </div>
+                        
+                        <div className="col-span-3 flex flex-col">
+                          <Label htmlFor={`big-blind-${level.id}`} className="text-xs mb-1">Big</Label>
+                          <Input
+                            id={`big-blind-${level.id}`}
+                            type="number"
+                            min="1"
+                            value={level.bigBlind}
+                            onChange={(e) => handleUpdateBlindLevel(level.id, 'bigBlind', parseInt(e.target.value) || 0)}
+                            className="h-8 text-sm"
+                          />
+                        </div>
+                        
+                        <div className="col-span-3 flex flex-col">
+                          <Label htmlFor={`ante-${level.id}`} className="text-xs mb-1">Ante</Label>
+                          <Input
+                            id={`ante-${level.id}`}
+                            type="number"
+                            min="0"
+                            value={level.ante}
+                            onChange={(e) => handleUpdateBlindLevel(level.id, 'ante', parseInt(e.target.value) || 0)}
+                            className="h-8 text-sm"
+                          />
+                        </div>
+                        
+                        <div className="col-span-3 flex flex-col">
+                          <Label htmlFor={`duration-${level.id}`} className="text-xs mb-1">Min</Label>
+                          <Input
+                            id={`duration-${level.id}`}
+                            type="number"
+                            min="1"
+                            value={Math.floor(level.duration / 60)}
+                            onChange={(e) => handleUpdateBlindLevel(level.id, 'duration', parseInt(e.target.value) * 60 || 60)}
+                            className="h-8 text-sm"
+                          />
+                        </div>
+                        
+                        {tournament.settings.blindStructure.levels.length > 1 && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="w-6 h-6 absolute -top-2 -right-2 rounded-full bg-destructive text-destructive-foreground"
+                            onClick={() => handleRemoveBlindLevel(level.id)}
+                          >
+                            <Trash className="h-3.5 w-3.5" />
+                            <span className="sr-only">Remove Level</span>
+                          </Button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
           </div>
@@ -243,48 +332,51 @@ const OrganizerPanel = () => {
                     <TabsContent value="percentage" className="space-y-4 mt-4">
                       <div className="space-y-4">
                         <div className="space-y-2">
-                          <div className="flex items-center justify-between">
-                            <Label htmlFor="first-place-pct">1st Place: {prizeDistribution.first}%</Label>
+                          <Label htmlFor="first-place-pct">1st Place Percentage</Label>
+                          <div className="flex gap-2 items-center">
+                            <Input
+                              id="first-place-pct"
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={prizeDistribution.first}
+                              onChange={(e) => updatePrizeDistribution({ first: parseFloat(e.target.value) || 0 })}
+                              className="w-full"
+                            />
+                            <span className="text-muted-foreground">%</span>
                           </div>
-                          <Slider
-                            id="first-place-pct"
-                            min={0}
-                            max={100}
-                            step={1}
-                            value={[prizeDistribution.first]}
-                            onValueChange={([value]) => updatePrizeDistribution({ first: value })}
-                            className="py-2"
-                          />
                         </div>
                         
                         <div className="space-y-2">
-                          <div className="flex items-center justify-between">
-                            <Label htmlFor="second-place-pct">2nd Place: {prizeDistribution.second}%</Label>
+                          <Label htmlFor="second-place-pct">2nd Place Percentage</Label>
+                          <div className="flex gap-2 items-center">
+                            <Input
+                              id="second-place-pct"
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={prizeDistribution.second}
+                              onChange={(e) => updatePrizeDistribution({ second: parseFloat(e.target.value) || 0 })}
+                              className="w-full"
+                            />
+                            <span className="text-muted-foreground">%</span>
                           </div>
-                          <Slider
-                            id="second-place-pct"
-                            min={0}
-                            max={100}
-                            step={1}
-                            value={[prizeDistribution.second]}
-                            onValueChange={([value]) => updatePrizeDistribution({ second: value })}
-                            className="py-2"
-                          />
                         </div>
                         
                         <div className="space-y-2">
-                          <div className="flex items-center justify-between">
-                            <Label htmlFor="third-place-pct">3rd Place: {prizeDistribution.third}%</Label>
+                          <Label htmlFor="third-place-pct">3rd Place Percentage</Label>
+                          <div className="flex gap-2 items-center">
+                            <Input
+                              id="third-place-pct"
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={prizeDistribution.third}
+                              onChange={(e) => updatePrizeDistribution({ third: parseFloat(e.target.value) || 0 })}
+                              className="w-full"
+                            />
+                            <span className="text-muted-foreground">%</span>
                           </div>
-                          <Slider
-                            id="third-place-pct"
-                            min={0}
-                            max={100}
-                            step={1}
-                            value={[prizeDistribution.third]}
-                            onValueChange={([value]) => updatePrizeDistribution({ third: value })}
-                            className="py-2"
-                          />
                         </div>
                         
                         <div className="text-sm">

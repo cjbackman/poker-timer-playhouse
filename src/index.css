@@ -7,7 +7,7 @@
 
 @layer base {
   :root {
-    --background: 210 33% 99%;
+    --background: 0 0% 100%;
     --foreground: 220 25% 18%;
 
     --card: 0 0% 100%;
@@ -93,7 +93,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased overflow-x-hidden;
+    @apply bg-white text-foreground font-sans antialiased overflow-x-hidden;
   }
 
   /* Custom scrollbar */
