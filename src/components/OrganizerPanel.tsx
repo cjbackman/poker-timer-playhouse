@@ -126,7 +126,7 @@ const OrganizerPanel = () => {
                       <SelectItem value="£">£ (Pound)</SelectItem>
                       <SelectItem value="¥">¥ (Yen)</SelectItem>
                       <SelectItem value="₹">₹ (Rupee)</SelectItem>
-                      <SelectItem value="">None</SelectItem>
+                      <SelectItem value="none">None</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
