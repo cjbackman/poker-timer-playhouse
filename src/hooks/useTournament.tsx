@@ -1,9 +1,9 @@
-
 import { useState, useCallback, createContext, useContext, ReactNode, useEffect } from 'react';
 import { BlindLevel, BlindStructure, blindStructures, getNextLevel } from '@/lib/blindStructures';
 import { useTimer } from './useTimer';
 import { playBlindChangeSound, playSuccessSound, playNotificationSound } from '@/lib/audio';
 import { useToast } from '@/components/ui/use-toast';
+import { saveTournamentState, loadTournamentState } from '@/lib/storage';
 
 // Define types
 export type PrizeDistributionType = 'percentage' | 'fixed';
@@ -95,14 +95,20 @@ export const useTournament = (): TournamentContextValue => {
 export const TournamentProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
   
-  // Tournament state
-  const [tournament, setTournament] = useState<TournamentState>({
-    settings: defaultSettings,
-    buyIns: 0,
-    reBuys: 0,
-    currentLevelId: 1,
-    isBlindChangeAlert: false,
-    isPanelOpen: false,
+  // Initialize tournament state, checking local storage first
+  const [tournament, setTournament] = useState<TournamentState>(() => {
+    const savedState = loadTournamentState();
+    if (savedState) {
+      return savedState;
+    }
+    return {
+      settings: defaultSettings,
+      buyIns: 0,
+      reBuys: 0,
+      currentLevelId: 1,
+      isBlindChangeAlert: false,
+      isPanelOpen: false,
+    };
   });
   
   // Get the current blind level
@@ -136,6 +142,11 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
       }
     },
   });
+  
+  // Save tournament state to local storage whenever it changes
+  useEffect(() => {
+    saveTournamentState(tournament);
+  }, [tournament]);
   
   // Calculate prize pool
   const prizePool = tournament.buyIns * tournament.settings.buyInAmount + 
