@@ -27,16 +27,6 @@ const Timer = () => {
     }
   });
   
-  // Add animation effect when time changes
-  useEffect(() => {
-    // Trigger animation only for significant changes (every 10 seconds)
-    if (timer.timeRemaining % 10 === 0) {
-      setAnimate(true);
-      const timeout = setTimeout(() => setAnimate(false), 500);
-      return () => clearTimeout(timeout);
-    }
-  }, [timer.timeRemaining]);
-  
   // Create a visual timer display
   const minutes = Math.floor(timer.timeRemaining / 60);
   const seconds = timer.timeRemaining % 60;
