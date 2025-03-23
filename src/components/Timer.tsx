@@ -4,10 +4,28 @@ import { useTournament } from '@/hooks/useTournament';
 import { Play, Pause, SkipForward, RefreshCw } from 'lucide-react';
 import { playButtonClickSound } from '@/lib/audio';
 import { Button } from '@/components/ui/button';
+import { useKeyboardControls } from '@/hooks/useKeyboardControls';
+import { shouldShowBlindChangeAlert } from '@/lib/timerUtils';
 
 const Timer = () => {
   const { timer, currentLevel, nextLevel, advanceToNextLevel, resetTournament } = useTournament();
   const [animate, setAnimate] = useState(false);
+  
+  // Set up keyboard controls for play/pause with spacebar
+  useKeyboardControls({
+    onSpacePress: () => {
+      if (timer.isRunning) {
+        timer.pause();
+      } else {
+        if (timer.isPaused) {
+          timer.resume();
+        } else {
+          timer.start();
+        }
+      }
+      playButtonClickSound();
+    }
+  });
   
   // Add animation effect when time changes
   useEffect(() => {
@@ -26,8 +44,8 @@ const Timer = () => {
   const formattedMinutes = minutes.toString().padStart(2, '0');
   const formattedSeconds = seconds.toString().padStart(2, '0');
   
-  // Determine if we're near the end of the timer (last 10% of the time)
-  const isNearEnd = timer.timeRemaining < currentLevel.duration * 0.1 && timer.timeRemaining > 0;
+  // Determine if we're near the end of the timer (using timerUtils)
+  const isNearEnd = shouldShowBlindChangeAlert(timer.timeRemaining);
   
   return (
     <div className="flex flex-col items-center justify-center gap-10 h-full">
