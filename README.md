@@ -30,6 +30,7 @@ This application is built with Vite, React, TypeScript, and Tailwind CSS. Here's
 
 - `src/lib/blindStructures.ts` - Predefined blind structures
 - `src/lib/audio.ts` - Audio effects for timer events
+- `src/lib/timerUtils.ts` - Utility functions for timer-related operations
 
 ## Using the Application
 
@@ -40,6 +41,39 @@ Tournament organizers can manage:
 - Buy-in amounts and rebuys
 - Blind structures (predefined or custom)
 - Prize pool distribution
+
+## Testing
+
+This project uses Vitest and React Testing Library for unit and integration testing.
+
+### Running Tests
+
+Add these scripts to your package.json:
+
+```json
+"scripts": {
+  "test": "vitest",
+  "test:ui": "vitest --ui",
+  "test:coverage": "vitest run --coverage"
+}
+```
+
+Then run these commands:
+
+```sh
+# Run tests in watch mode
+npm run test
+
+# Run tests with UI
+npm run test:ui
+
+# Generate test coverage report
+npm run test:coverage
+```
+
+### Test Files
+
+Test files are co-located with the source files they test, using the `.test.tsx` or `.test.ts` extension.
 
 ## How can I edit this code?
 
