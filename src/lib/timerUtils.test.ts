@@ -22,7 +22,7 @@ describe('timerUtils', () => {
   });
 
   describe('formatBlindChangeNotification', () => {
-    it('should correctly format the notification message', () => {
+    it('should correctly format the notification message without currency symbols', () => {
       expect(formatBlindChangeNotification(25, 50)).toBe('Blinds changing to 25/50');
       expect(formatBlindChangeNotification(100, 200)).toBe('Blinds changing to 100/200');
     });

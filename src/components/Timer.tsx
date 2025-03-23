@@ -1,14 +1,14 @@
 
 import { useState, useEffect } from 'react';
 import { useTournament } from '@/hooks/useTournament';
-import { Play, Pause, SkipForward, RefreshCw } from 'lucide-react';
+import { Play, Pause } from 'lucide-react';
 import { playButtonClickSound } from '@/lib/audio';
 import { Button } from '@/components/ui/button';
 import { useKeyboardControls } from '@/hooks/useKeyboardControls';
 import { shouldShowBlindChangeAlert } from '@/lib/timerUtils';
 
 const Timer = () => {
-  const { timer, currentLevel, nextLevel, advanceToNextLevel, resetTournament } = useTournament();
+  const { timer, currentLevel } = useTournament();
   const [animate, setAnimate] = useState(false);
   
   // Set up keyboard controls for play/pause with spacebar
@@ -64,7 +64,7 @@ const Timer = () => {
         </span>
       </div>
       
-      {/* Timer Controls - Larger and more spaced */}
+      {/* Timer Controls - Simplified to just play/pause */}
       <div className="flex gap-5 items-center">
         {/* Play/Pause Button */}
         {timer.isRunning ? (
@@ -98,35 +98,6 @@ const Timer = () => {
             <span className="sr-only">Play</span>
           </Button>
         )}
-        
-        {/* Next Level Button */}
-        <Button 
-          variant="outline" 
-          size="lg"
-          className="h-16 px-6 rounded-full shadow-button hover:shadow-button-hover transition-all duration-300"
-          onClick={() => {
-            advanceToNextLevel();
-            playButtonClickSound();
-          }}
-          disabled={!nextLevel}
-        >
-          <SkipForward className="h-6 w-6 mr-2" />
-          <span className="hidden sm:inline">Next Level</span>
-        </Button>
-        
-        {/* Reset Button */}
-        <Button 
-          variant="outline" 
-          size="lg" 
-          className="h-16 w-16 rounded-full shadow-button hover:shadow-button-hover transition-all duration-300"
-          onClick={() => {
-            resetTournament();
-            playButtonClickSound();
-          }}
-        >
-          <RefreshCw className="h-6 w-6" />
-          <span className="sr-only">Reset</span>
-        </Button>
       </div>
     </div>
   );
