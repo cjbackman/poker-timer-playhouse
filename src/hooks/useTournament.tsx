@@ -130,9 +130,9 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
         variant: 'default',
       });
       
-      // Auto-advance to the next level after a short delay
+      // Auto-advance to the next level
       if (nextLevel) {
-        setTimeout(advanceToNextLevel, 3000);
+        advanceToNextLevel();
       }
     },
   });
