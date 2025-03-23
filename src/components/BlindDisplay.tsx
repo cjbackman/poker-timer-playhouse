@@ -31,7 +31,7 @@ const BlindDisplay = () => {
         `}
       >
         <div className="text-sm uppercase tracking-wide text-muted-foreground mb-2">Current Blinds</div>
-        <div className="text-4xl md:text-5xl font-semibold">
+        <div className="text-5xl md:text-6xl font-semibold">
           {currentLevel.smallBlind} / {currentLevel.bigBlind}
         </div>
         {currentLevel.ante > 0 && (
@@ -45,7 +45,7 @@ const BlindDisplay = () => {
       {nextLevel && (
         <div className="glass p-4 rounded-xl transition-all duration-300 w-full">
           <div className="text-xs uppercase tracking-wide text-muted-foreground mb-1">Next Level</div>
-          <div className="text-2xl md:text-3xl font-medium">
+          <div className="text-xl md:text-2xl font-medium">
             {nextLevel.smallBlind} / {nextLevel.bigBlind}
           </div>
           {nextLevel.ante > 0 && (
