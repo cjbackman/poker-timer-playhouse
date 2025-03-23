@@ -17,7 +17,6 @@ export interface PrizeDistribution {
 
 export interface TournamentSettings {
   title: string;
-  currency: string;
   buyInAmount: number;
   reBuyAmount: number;
   blindStructure: BlindStructure;
@@ -69,7 +68,6 @@ export interface TournamentContextValue {
 // Default settings
 const defaultSettings: TournamentSettings = {
   title: 'Poker Tournament',
-  currency: '$',
   buyInAmount: 20,
   reBuyAmount: 20,
   blindStructure: blindStructures.regular,
@@ -127,7 +125,7 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
       toast({
         title: 'Blind Level Complete',
         description: nextLevel 
-          ? `New blinds: ${tournament.settings.currency}${nextLevel.smallBlind}/${tournament.settings.currency}${nextLevel.bigBlind}`
+          ? `New blinds: ${nextLevel.smallBlind}/${nextLevel.bigBlind}`
           : 'This is the final level',
         variant: 'default',
       });
@@ -319,11 +317,11 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
       // Show a toast notification
       toast({
         title: 'New Blind Level',
-        description: `Level ${nextLevel.id}: ${tournament.settings.currency}${nextLevel.smallBlind}/${tournament.settings.currency}${nextLevel.bigBlind}`,
+        description: `Level ${nextLevel.id}: ${nextLevel.smallBlind}/${nextLevel.bigBlind}`,
         variant: 'default',
       });
     }
-  }, [nextLevel, timer, toast, tournament.settings.currency]);
+  }, [nextLevel, timer, toast]);
   
   // Reset the tournament
   const resetTournament = useCallback(() => {
