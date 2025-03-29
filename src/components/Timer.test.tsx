@@ -175,20 +175,19 @@ describe('Timer', () => {
   });
 
   it('timer automatically starts when advancing to a new level', () => {
+    // Use fake timers from Vitest
+    vi.useFakeTimers();
+
     // Create mocks for the timer functions
     const timerStartMock = vi.fn();
     const timerResetMock = vi.fn();
     const advanceToNextLevelMock = vi.fn().mockImplementation(() => {
-      // When advanceToNextLevel is called, we simulate the behavior
-      // by calling reset and then start
       timerResetMock(900);
-      // Important: Simulate the setTimeout behavior in the actual implementation
       setTimeout(() => {
         timerStartMock();
-      }, 0);
+      }, 0);  // Simulating immediate start after reset
     });
     
-    // Override the mock implementation for this specific test
     vi.mocked(useTournament).mockImplementationOnce(() => ({
       timer: {
         timeRemaining: 900,
@@ -221,43 +220,22 @@ describe('Timer', () => {
             third: 10,
           },
         },
-        buyIns: 0,
-        reBuys: 0,
-        currentLevelId: 1,
-        isBlindChangeAlert: false,
-        isPanelOpen: false,
+        currentLevel: {
+          id: 1,
+          smallBlind: 5,
+          bigBlind: 10,
+          ante: 0,
+          duration: 900,
+        },
+        nextLevel: {
+          id: 2,
+          smallBlind: 10,
+          bigBlind: 20,
+          ante: 0,
+          duration: 900,
+        },
+        advanceToNextLevel: advanceToNextLevelMock,
       },
-      currentLevel: {
-        id: 1,
-        smallBlind: 5,
-        bigBlind: 10,
-        ante: 0,
-        duration: 900,
-      },
-      nextLevel: {
-        id: 2,
-        smallBlind: 10,
-        bigBlind: 20,
-        ante: 0,
-        duration: 900,
-      },
-      prizePool: 0,
-      prizes: { first: 0, second: 0, third: 0 },
-      advanceToNextLevel: advanceToNextLevelMock,
-      updateSettings: vi.fn(),
-      updateBlindStructure: vi.fn(),
-      addBuyIn: vi.fn(),
-      removeBuyIn: vi.fn(),
-      addReBuy: vi.fn(),
-      removeReBuy: vi.fn(),
-      resetTournament: vi.fn(),
-      toggleSettingsPanel: vi.fn(),
-      dismissAlert: vi.fn(),
-      updatePrizeDistribution: vi.fn(),
-      updateCustomBlindStructure: vi.fn(),
-      addBlindLevel: vi.fn(),
-      removeBlindLevel: vi.fn(),
-      updateBlindLevel: vi.fn(),
     }));
 
     render(
@@ -270,19 +248,17 @@ describe('Timer', () => {
     act(() => {
       advanceToNextLevelMock();
     });
-    
-    // Use fake timers to advance past the setTimeout
+
+    // Fast-forward the timers to ensure the start function is called
     act(() => {
       vi.runAllTimers();
     });
-    
-    // Timer should have been reset and started
-    expect(timerResetMock).toHaveBeenCalled();
-    
-    // We need to verify that timerStartMock will be called after the timeout
-    // This is a bit tricky in tests, but we can use jest's timer mocks
-    setTimeout(() => {
-      expect(timerStartMock).toHaveBeenCalled();
-    }, 10);
+
+    // Assertions
+    expect(timerResetMock).toHaveBeenCalledWith(900);
+    expect(timerStartMock).toHaveBeenCalled();
+
+    // Clean up timers
+    vi.useRealTimers();
   });
 });
