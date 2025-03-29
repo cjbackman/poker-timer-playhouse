@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useTournament } from '@/hooks/useTournament';
 import { Settings, X, ChevronRight, ChevronDown, Percent, DollarSign, Plus, Trash, RotateCcw } from 'lucide-react';
@@ -29,7 +28,6 @@ const OrganizerPanel = () => {
   const { settings, isPanelOpen } = tournament;
   const { buyInAmount, reBuyAmount, prizeDistribution } = settings;
   
-  // Local state for buy-in fields with auto-save
   const [expandedSections, setExpandedSections] = useState({
     buyins: true,
     structure: false,
@@ -37,7 +35,6 @@ const OrganizerPanel = () => {
     reset: false,
   });
   
-  // Toggle section expansion
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections(prev => ({
       ...prev,
@@ -46,7 +43,6 @@ const OrganizerPanel = () => {
     playButtonClickSound();
   };
   
-  // Handle buy-in amount change with auto-save
   const handleBuyInAmountChange = (value: string) => {
     const newAmount = parseInt(value) || 0;
     updateSettings({
@@ -55,7 +51,6 @@ const OrganizerPanel = () => {
     playButtonClickSound();
   };
   
-  // Handle rebuy amount change with auto-save
   const handleReBuyAmountChange = (value: string) => {
     const newAmount = parseInt(value) || 0;
     updateSettings({
@@ -64,13 +59,11 @@ const OrganizerPanel = () => {
     playButtonClickSound();
   };
   
-  // Handle changes to prize distribution type
   const handlePrizeDistributionTypeChange = (type: 'percentage' | 'fixed') => {
     updatePrizeDistribution({ type });
     playButtonClickSound();
   };
   
-  // Handle adding a new blind level
   const handleAddBlindLevel = () => {
     const lastLevel = tournament.settings.blindStructure.levels[tournament.settings.blindStructure.levels.length - 1];
     const newLevel = {
@@ -85,20 +78,37 @@ const OrganizerPanel = () => {
     playButtonClickSound();
   };
   
-  // Handle removing a blind level
   const handleRemoveBlindLevel = (levelId: number) => {
     removeBlindLevel(levelId);
     playButtonClickSound();
   };
   
-  // Handle updating a blind level
   const handleUpdateBlindLevel = (levelId: number, field: 'smallBlind' | 'bigBlind' | 'ante' | 'duration', value: number) => {
-    updateBlindLevel(levelId, field, value);
+    if (field === 'duration') {
+      updateBlindLevel(levelId, field, value);
+    } else {
+      updateBlindLevel(levelId, field, value);
+    }
   };
   
-  // Handle resetting the tournament and clearing local storage
+  const handleDurationChange = (levelId: number, value: string) => {
+    const trimmedValue = value.trim();
+    
+    if (trimmedValue.endsWith('s')) {
+      const seconds = parseInt(trimmedValue.slice(0, -1));
+      if (!isNaN(seconds)) {
+        updateBlindLevel(levelId, 'duration', seconds || 60);
+      }
+    } else {
+      const minutes = parseInt(trimmedValue);
+      if (!isNaN(minutes)) {
+        updateBlindLevel(levelId, 'duration', (minutes * 60) || 60);
+      }
+    }
+  };
+  
   const handleResetTournament = () => {
-    resetTournament(true); // Pass true to clear all settings
+    resetTournament(true);
     playButtonClickSound();
   };
   
@@ -117,7 +127,6 @@ const OrganizerPanel = () => {
   
   return (
     <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex justify-end">
-      {/* Panel */}
       <div className="w-full max-w-md bg-background border-l shadow-lg overflow-y-auto animate-slide-in-right">
         <div className="p-4 sticky top-0 bg-background/80 backdrop-blur-sm z-10 border-b flex items-center justify-between">
           <h2 className="text-xl font-semibold flex items-center gap-2">
@@ -136,7 +145,6 @@ const OrganizerPanel = () => {
         </div>
         
         <div className="p-4 space-y-6">
-          {/* Buy-in & Rebuy Settings */}
           <div className="space-y-3">
             <button 
               className="w-full flex items-center justify-between"
@@ -181,7 +189,6 @@ const OrganizerPanel = () => {
           
           <Separator />
           
-          {/* Blind Structure Settings */}
           <div className="space-y-3">
             <button 
               className="w-full flex items-center justify-between"
@@ -277,11 +284,11 @@ const OrganizerPanel = () => {
                           <Label htmlFor={`duration-${level.id}`} className="text-xs mb-1">Min</Label>
                           <Input
                             id={`duration-${level.id}`}
-                            type="number"
-                            min="1"
-                            value={Math.floor(level.duration / 60)}
-                            onChange={(e) => handleUpdateBlindLevel(level.id, 'duration', parseInt(e.target.value) * 60 || 60)}
+                            type="text"
+                            value={level.duration % 60 === 0 ? Math.floor(level.duration / 60) : `${level.duration}s`}
+                            onChange={(e) => handleDurationChange(level.id, e.target.value)}
                             className="h-8 text-sm"
+                            title="Enter minutes or seconds with 's' suffix (e.g. '5' for 5 minutes or '300s' for 300 seconds)"
                           />
                         </div>
                         
@@ -306,7 +313,6 @@ const OrganizerPanel = () => {
           
           <Separator />
           
-          {/* Prize Distribution Settings */}
           <div className="space-y-3">
             <button 
               className="w-full flex items-center justify-between"
@@ -452,7 +458,6 @@ const OrganizerPanel = () => {
           
           <Separator />
           
-          {/* Reset Tournament Section */}
           <div className="space-y-3">
             <button 
               className="w-full flex items-center justify-between"
