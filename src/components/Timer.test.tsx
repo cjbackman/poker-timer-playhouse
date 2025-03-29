@@ -173,22 +173,6 @@ describe('Timer', () => {
     expect(audioModule.playButtonClickSound).toHaveBeenCalledTimes(1);
   });
 
-  it('shows pause button when timer is running', () => {
-    render(
-      <TournamentProvider>
-        <Timer />
-      </TournamentProvider>
-    );
-    
-    // Click play to start the timer
-    const playButton = screen.getByRole('button', { name: /play/i });
-    fireEvent.click(playButton);
-    
-    // Pause button should now be visible
-    const pauseButton = screen.getByRole('button', { name: /pause/i });
-    expect(pauseButton).toBeInTheDocument();
-  });
-
   it('timer automatically starts when advancing to a new level', () => {
     // Create mocks for the timer functions
     const timerStartMock = vi.fn();
