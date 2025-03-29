@@ -26,17 +26,32 @@ describe('Timer', () => {
     vi.clearAllMocks();
   });
 
-  it('renders the timer with formatted time', () => {
-    render(
-      <TournamentProvider>
-        <Timer />
-      </TournamentProvider>
-    );
-    
-    // The initial time should be visible and formatted correctly (15:00 by default)
-    const timeDisplay = screen.getByText(/\d{2}:\d{2}/);
-    expect(timeDisplay).toBeInTheDocument();
-  });
+it('renders the timer with formatted time', () => {
+  render(
+    <TournamentProvider>
+      <Timer />
+    </TournamentProvider>
+  );
+
+  // Select the main timer container
+  const timerContainer = screen.getByRole('timer');
+  expect(timerContainer).toBeInTheDocument();
+
+  // Get all <span> elements inside the timer container
+  const timeSegments = timerContainer.querySelectorAll('span');
+
+  // Ensure the timer contains exactly three parts: hours, separator, and minutes
+  expect(timeSegments).toHaveLength(3);
+
+  const [hours, separator, minutes] = timeSegments;
+
+  // Assert hours and minutes match the pattern of two digits (e.g., "15", "00", "09")
+  expect(hours.textContent).toMatch(/^\d{2}$/);
+  expect(minutes.textContent).toMatch(/^\d{2}$/);
+
+  // Assert the separator is exactly a colon (:)
+  expect(separator.textContent).toBe(':');
+});
 
   it('shows play button when timer is not running', () => {
     render(
