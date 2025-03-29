@@ -1,3 +1,4 @@
+
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { TournamentProvider, useTournament } from '@/hooks/useTournament';
@@ -77,13 +78,13 @@ vi.mock('@/hooks/useTournament', () => {
     },
     prizePool: 0,
     prizes: { first: 0, second: 0, third: 0 },
-    advanceToNextLevel: vi.fn(),
     updateSettings: vi.fn(),
     updateBlindStructure: vi.fn(),
     addBuyIn: vi.fn(),
     removeBuyIn: vi.fn(),
     addReBuy: vi.fn(),
     removeReBuy: vi.fn(),
+    advanceToNextLevel: vi.fn(),
     resetTournament: vi.fn(),
     toggleSettingsPanel: vi.fn(),
     dismissAlert: vi.fn(),
@@ -177,7 +178,12 @@ describe('Timer', () => {
     // Create mocks for the timer functions
     const timerStartMock = vi.fn();
     const timerResetMock = vi.fn();
-    const advanceToNextLevelMock = vi.fn();
+    const advanceToNextLevelMock = vi.fn().mockImplementation(() => {
+      // When advanceToNextLevel is called, we simulate the behavior
+      // by calling reset and then start
+      timerResetMock(900);
+      timerStartMock();
+    });
     
     // Override the mock implementation for this specific test
     vi.mocked(useTournament).mockImplementationOnce(() => ({
@@ -234,12 +240,7 @@ describe('Timer', () => {
       },
       prizePool: 0,
       prizes: { first: 0, second: 0, third: 0 },
-      advanceToNextLevel: advanceToNextLevelMock.mockImplementation(() => {
-        // When advanceToNextLevel is called, we simulate the behavior
-        // by calling reset and then start
-        timerResetMock(900);
-        timerStartMock();
-      }),
+      advanceToNextLevel: advanceToNextLevelMock,
       updateSettings: vi.fn(),
       updateBlindStructure: vi.fn(),
       addBuyIn: vi.fn(),
