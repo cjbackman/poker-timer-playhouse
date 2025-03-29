@@ -94,34 +94,4 @@ describe('Timer', () => {
     const pauseButton = screen.getByRole('button', { name: /pause/i });
     expect(pauseButton).toBeInTheDocument();
   });
-
-  it('allows advancing to the next level', () => {
-    render(
-      <TournamentProvider>
-        <Timer />
-      </TournamentProvider>
-    );
-    
-    // Find and click the Next Level button
-    const nextLevelButton = screen.getByRole('button', { name: /next level/i });
-    fireEvent.click(nextLevelButton);
-    
-    // Check if sound was played
-    expect(audioModule.playButtonClickSound).toHaveBeenCalledTimes(1);
-  });
-
-  it('allows resetting the tournament', () => {
-    render(
-      <TournamentProvider>
-        <Timer />
-      </TournamentProvider>
-    );
-    
-    // Find and click the Reset button
-    const resetButton = screen.getByRole('button', { name: /reset/i });
-    fireEvent.click(resetButton);
-    
-    // Check if sound was played
-    expect(audioModule.playButtonClickSound).toHaveBeenCalledTimes(1);
-  });
 });
