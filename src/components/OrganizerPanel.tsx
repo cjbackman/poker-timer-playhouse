@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useTournament } from '@/hooks/useTournament';
 import { Settings, X, ChevronRight, ChevronDown, Percent, DollarSign, Plus, Trash, RotateCcw } from 'lucide-react';
@@ -28,9 +29,7 @@ const OrganizerPanel = () => {
   const { settings, isPanelOpen } = tournament;
   const { buyInAmount, reBuyAmount, prizeDistribution } = settings;
   
-  // Local state for form fields
-  const [localBuyInAmount, setLocalBuyInAmount] = useState(buyInAmount.toString());
-  const [localReBuyAmount, setLocalReBuyAmount] = useState(reBuyAmount.toString());
+  // Local state for buy-in fields with auto-save
   const [expandedSections, setExpandedSections] = useState({
     buyins: true,
     structure: false,
@@ -47,16 +46,21 @@ const OrganizerPanel = () => {
     playButtonClickSound();
   };
   
-  // Handle saving buy-in and rebuy amounts
-  const saveBuyInSettings = () => {
-    const newBuyInAmount = parseInt(localBuyInAmount) || 0;
-    const newReBuyAmount = parseInt(localReBuyAmount) || 0;
-    
+  // Handle buy-in amount change with auto-save
+  const handleBuyInAmountChange = (value: string) => {
+    const newAmount = parseInt(value) || 0;
     updateSettings({
-      buyInAmount: newBuyInAmount > 0 ? newBuyInAmount : 1,
-      reBuyAmount: newReBuyAmount > 0 ? newReBuyAmount : 1,
+      buyInAmount: newAmount > 0 ? newAmount : 1,
     });
-    
+    playButtonClickSound();
+  };
+  
+  // Handle rebuy amount change with auto-save
+  const handleReBuyAmountChange = (value: string) => {
+    const newAmount = parseInt(value) || 0;
+    updateSettings({
+      reBuyAmount: newAmount > 0 ? newAmount : 1,
+    });
     playButtonClickSound();
   };
   
@@ -151,8 +155,8 @@ const OrganizerPanel = () => {
                       id="buy-in-amount"
                       type="number"
                       min="1"
-                      value={localBuyInAmount}
-                      onChange={(e) => setLocalBuyInAmount(e.target.value)}
+                      value={buyInAmount}
+                      onChange={(e) => handleBuyInAmountChange(e.target.value)}
                       className="w-full"
                     />
                   </div>
@@ -165,16 +169,12 @@ const OrganizerPanel = () => {
                       id="rebuy-amount"
                       type="number"
                       min="1"
-                      value={localReBuyAmount}
-                      onChange={(e) => setLocalReBuyAmount(e.target.value)}
+                      value={reBuyAmount}
+                      onChange={(e) => handleReBuyAmountChange(e.target.value)}
                       className="w-full"
                     />
                   </div>
                 </div>
-                
-                <Button className="w-full" onClick={saveBuyInSettings}>
-                  Save Settings
-                </Button>
               </div>
             )}
           </div>
