@@ -312,6 +312,7 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
   
   // Advance to the next blind level
   const advanceToNextLevel = useCallback(() => {
+    console.log("Advancing to next level");
     if (nextLevel) {
       setTournament((prev) => ({
         ...prev,
@@ -320,10 +321,15 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
       }));
       
       // Reset the timer to the new level's duration
+      console.log("Resetting timer with duration:", nextLevel.duration);
       timer.reset(nextLevel.duration);
       
-      // Start the timer automatically after advancing to the next level
-      timer.start();
+      // Important: We need to ensure the timer starts AFTER the reset is processed
+      // Using setTimeout with 0 delay to ensure this runs after the current execution context
+      setTimeout(() => {
+        console.log("Starting timer after level change");
+        timer.start();
+      }, 0);
       
       // Play a notification sound
       playNotificationSound();

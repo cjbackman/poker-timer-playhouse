@@ -49,6 +49,7 @@ export const useTimer = ({
   // Effect to start/stop timer when isRunning changes
   useEffect(() => {
     if (isRunning) {
+      console.log("Timer started/resumed! isRunning:", isRunning);
       // Clear any existing interval
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -96,6 +97,7 @@ export const useTimer = ({
         }
       }, interval);
     } else if (intervalRef.current) {
+      console.log("Timer stopped! isRunning:", isRunning);
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
@@ -105,6 +107,7 @@ export const useTimer = ({
   
   // Effect to update timeRemaining when initialTime changes
   useEffect(() => {
+    console.log("Timer reset with new initialTime:", initialTime);
     setTimeRemaining(initialTime);
     timeRemainingRef.current = initialTime;
     setIsComplete(false);
@@ -117,15 +120,20 @@ export const useTimer = ({
   
   // Start the timer
   const start = useCallback(() => {
+    console.log("Timer start called, current state:", { isRunning: isRunningRef.current, timeRemaining: timeRemainingRef.current });
     if (!isRunningRef.current && timeRemainingRef.current > 0) {
+      console.log("Starting timer");
       setIsRunning(true);
       setIsPaused(false);
       setIsComplete(false);
+    } else {
+      console.log("Cannot start timer - already running or time is 0");
     }
   }, []);
   
   // Pause the timer
   const pause = useCallback(() => {
+    console.log("Timer pause called");
     if (isRunningRef.current) {
       setIsRunning(false);
       setIsPaused(true);
@@ -134,6 +142,7 @@ export const useTimer = ({
   
   // Resume the timer
   const resume = useCallback(() => {
+    console.log("Timer resume called");
     if (!isRunningRef.current && !isComplete && isPaused) {
       setIsRunning(true);
       setIsPaused(false);
@@ -142,12 +151,19 @@ export const useTimer = ({
   
   // Reset the timer
   const reset = useCallback((newTime?: number) => {
+    console.log("Timer reset called with time:", newTime);
     const resetTime = newTime !== undefined ? newTime : initialTime;
-    setIsRunning(false);
-    setIsPaused(true);
-    setIsComplete(false);
+    
+    // First stop the timer if it's running
+    if (isRunningRef.current) {
+      setIsRunning(false);
+    }
+    
+    // Then update the time
     setTimeRemaining(resetTime);
     timeRemainingRef.current = resetTime;
+    setIsPaused(true);
+    setIsComplete(false);
     
     // Call onTimeChange callback
     if (callbackRef.current.onTimeChange) {
