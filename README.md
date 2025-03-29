@@ -48,18 +48,6 @@ This project uses Vitest and React Testing Library for unit and integration test
 
 ### Running Tests
 
-Add these scripts to your package.json:
-
-```json
-"scripts": {
-  "test": "vitest",
-  "test:ui": "vitest --ui",
-  "test:coverage": "vitest run --coverage"
-}
-```
-
-Then run these commands:
-
 ```sh
 # Run tests in watch mode
 npm run test
