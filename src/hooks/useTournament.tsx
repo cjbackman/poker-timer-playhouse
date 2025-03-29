@@ -3,7 +3,7 @@ import { BlindLevel, BlindStructure, blindStructures, getNextLevel } from '@/lib
 import { useTimer } from './useTimer';
 import { playBlindChangeSound, playSuccessSound, playNotificationSound } from '@/lib/audio';
 import { useToast } from '@/components/ui/use-toast';
-import { saveTournamentState, loadTournamentState } from '@/lib/storage';
+import { saveTournamentState, loadTournamentState, clearTournamentState } from '@/lib/storage';
 
 // Define types
 export type PrizeDistributionType = 'percentage' | 'fixed';
@@ -51,7 +51,7 @@ export interface TournamentContextValue {
   addReBuy: () => void;
   removeReBuy: () => void;
   advanceToNextLevel: () => void;
-  resetTournament: () => void;
+  resetTournament: (clearStorage?: boolean) => void;
   toggleSettingsPanel: () => void;
   dismissAlert: () => void;
   
@@ -335,22 +335,47 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
   }, [nextLevel, timer, toast]);
   
   // Reset the tournament
-  const resetTournament = useCallback(() => {
-    setTournament((prev) => ({
-      ...prev,
-      currentLevelId: 1,
-      isBlindChangeAlert: false,
-    }));
-    
-    // Reset the timer to the first level's duration
-    timer.reset(tournament.settings.blindStructure.levels[0].duration);
-    
-    // Show a toast notification
-    toast({
-      title: 'Tournament Reset',
-      description: 'Tournament has been reset to the first level',
-      variant: 'default',
-    });
+  const resetTournament = useCallback((clearStorage = false) => {
+    if (clearStorage) {
+      // Clear local storage and reset to defaults
+      clearTournamentState();
+      
+      setTournament({
+        settings: defaultSettings,
+        buyIns: 0,
+        reBuys: 0,
+        currentLevelId: 1,
+        isBlindChangeAlert: false,
+        isPanelOpen: false,
+      });
+      
+      // Reset the timer to the first level's duration
+      timer.reset(defaultSettings.blindStructure.levels[0].duration);
+      
+      // Show a toast notification
+      toast({
+        title: 'Tournament Completely Reset',
+        description: 'All settings have been restored to defaults',
+        variant: 'default',
+      });
+    } else {
+      // Just reset the current level without clearing storage
+      setTournament((prev) => ({
+        ...prev,
+        currentLevelId: 1,
+        isBlindChangeAlert: false,
+      }));
+      
+      // Reset the timer to the first level's duration
+      timer.reset(tournament.settings.blindStructure.levels[0].duration);
+      
+      // Show a toast notification
+      toast({
+        title: 'Tournament Reset',
+        description: 'Tournament has been reset to the first level',
+        variant: 'default',
+      });
+    }
   }, [timer, toast, tournament.settings.blindStructure.levels]);
   
   // Toggle the settings panel

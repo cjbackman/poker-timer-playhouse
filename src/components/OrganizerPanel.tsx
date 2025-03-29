@@ -1,7 +1,6 @@
-
 import { useState } from 'react';
 import { useTournament } from '@/hooks/useTournament';
-import { Settings, X, ChevronRight, ChevronDown, Percent, DollarSign, Plus, Trash } from 'lucide-react';
+import { Settings, X, ChevronRight, ChevronDown, Percent, DollarSign, Plus, Trash, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -22,11 +21,12 @@ const OrganizerPanel = () => {
     updateCustomBlindStructure,
     addBlindLevel,
     removeBlindLevel,
-    updateBlindLevel
+    updateBlindLevel,
+    resetTournament
   } = useTournament();
   
   const { settings, isPanelOpen } = tournament;
-  const { buyInAmount, reBuyAmount, currency, prizeDistribution } = settings;
+  const { buyInAmount, reBuyAmount, prizeDistribution } = settings;
   
   // Local state for form fields
   const [localBuyInAmount, setLocalBuyInAmount] = useState(buyInAmount.toString());
@@ -35,6 +35,7 @@ const OrganizerPanel = () => {
     buyins: true,
     structure: false,
     prizes: false,
+    reset: false,
   });
   
   // Toggle section expansion
@@ -89,6 +90,12 @@ const OrganizerPanel = () => {
   // Handle updating a blind level
   const handleUpdateBlindLevel = (levelId: number, field: 'smallBlind' | 'bigBlind' | 'ante' | 'duration', value: number) => {
     updateBlindLevel(levelId, field, value);
+  };
+  
+  // Handle resetting the tournament and clearing local storage
+  const handleResetTournament = () => {
+    resetTournament(true); // Pass true to clear all settings
+    playButtonClickSound();
   };
   
   if (!isPanelOpen) {
@@ -397,7 +404,6 @@ const OrganizerPanel = () => {
                         <div className="space-y-2">
                           <Label htmlFor="first-place-fixed">1st Place Amount</Label>
                           <div className="flex gap-2 items-center">
-                            <span className="text-muted-foreground">{currency}</span>
                             <Input
                               id="first-place-fixed"
                               type="number"
@@ -412,7 +418,6 @@ const OrganizerPanel = () => {
                         <div className="space-y-2">
                           <Label htmlFor="second-place-fixed">2nd Place Amount</Label>
                           <div className="flex gap-2 items-center">
-                            <span className="text-muted-foreground">{currency}</span>
                             <Input
                               id="second-place-fixed"
                               type="number"
@@ -427,7 +432,6 @@ const OrganizerPanel = () => {
                         <div className="space-y-2">
                           <Label htmlFor="third-place-fixed">3rd Place Amount</Label>
                           <div className="flex gap-2 items-center">
-                            <span className="text-muted-foreground">{currency}</span>
                             <Input
                               id="third-place-fixed"
                               type="number"
@@ -442,6 +446,38 @@ const OrganizerPanel = () => {
                     </TabsContent>
                   </Tabs>
                 </div>
+              </div>
+            )}
+          </div>
+          
+          <Separator />
+          
+          {/* Reset Tournament Section */}
+          <div className="space-y-3">
+            <button 
+              className="w-full flex items-center justify-between"
+              onClick={() => toggleSection('reset')}
+            >
+              <h3 className="text-lg font-medium">Reset Tournament</h3>
+              {expandedSections.reset ? <ChevronDown className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
+            </button>
+            
+            {expandedSections.reset && (
+              <div className="space-y-4 pt-2 pl-2">
+                <p className="text-sm text-muted-foreground">
+                  Resetting the tournament will clear all settings, buy-ins, and restore everything to default values.
+                  This action cannot be undone.
+                </p>
+                
+                <Button 
+                  variant="reset" 
+                  size="lg" 
+                  className="w-full flex items-center justify-center gap-2"
+                  onClick={handleResetTournament}
+                >
+                  <RotateCcw className="h-5 w-5" />
+                  Reset All Tournament Settings
+                </Button>
               </div>
             )}
           </div>

@@ -1,14 +1,14 @@
 
 import { useState, useEffect } from 'react';
 import { useTournament } from '@/hooks/useTournament';
-import { Play, Pause, RotateCcw } from 'lucide-react';
+import { Play, Pause } from 'lucide-react';
 import { playButtonClickSound } from '@/lib/audio';
 import { Button } from '@/components/ui/button';
 import { useKeyboardControls } from '@/hooks/useKeyboardControls';
 import { shouldShowBlindChangeAlert } from '@/lib/timerUtils';
 
 const Timer = () => {
-  const { timer, currentLevel, resetTournament } = useTournament();
+  const { timer, currentLevel } = useTournament();
   const [animate, setAnimate] = useState(false);
   
   // Set up keyboard controls for play/pause with spacebar
@@ -54,7 +54,7 @@ const Timer = () => {
         </span>
       </div>
       
-      {/* Timer Controls - Play/pause and reset */}
+      {/* Timer Controls - Play/pause button only */}
       <div className="flex gap-5 items-center">
         {/* Play/Pause Button */}
         {timer.isRunning ? (
@@ -88,20 +88,6 @@ const Timer = () => {
             <span className="sr-only">Play</span>
           </Button>
         )}
-        
-        {/* Reset Tournament Button */}
-        <Button 
-          variant="outline" 
-          size="lg" 
-          className="h-12 w-12 rounded-full shadow-button hover:shadow-button-hover transition-all duration-300 border-2"
-          onClick={() => {
-            resetTournament();
-            playButtonClickSound();
-          }}
-        >
-          <RotateCcw className="h-6 w-6" />
-          <span className="sr-only">Reset Tournament</span>
-        </Button>
       </div>
     </div>
   );
