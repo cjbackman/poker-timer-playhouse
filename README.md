@@ -2,10 +2,9 @@
 
 A professional poker tournament timer and management application.
 
-**Lovable Project**: https://lovable.dev/projects/2932a2c0-90f3-4136-b917-1b3637efa38d
-**URL**: https://poker-timer-playhouse.lovable.app/
+- [Demo](https://poker-timer-playhouse.lovable.app)
 
-## Using the Application
+## Usage
 
 The timer supports keyboard shortcuts:
 
@@ -42,7 +41,14 @@ This application is built with Vite, React, TypeScript, and Tailwind CSS. Here's
 - `src/lib/audio.ts` - Audio effects for timer events
 - `src/lib/timerUtils.ts` - Utility functions for timer-related operations
 
-## Testing
+## Install
+
+```sh
+# Install dependencies
+npm i
+```
+
+## Test
 
 This project uses Vitest and React Testing Library for unit and integration testing.
 
@@ -63,12 +69,9 @@ npm run test:coverage
 
 Test files are co-located with the source files they test, using the `.test.tsx` or `.test.ts` extension.
 
-## Running
+## Run
 
 ```sh
-# Install dependencies
-npm i
-
 # Run dev server
 npm run dev
 ```
