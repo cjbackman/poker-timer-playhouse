@@ -36,6 +36,31 @@ vi.mock('@/hooks/useTournament', () => {
       addTime: vi.fn(),
       formatTime: vi.fn((seconds) => `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`),
     },
+    tournament: {
+      settings: {
+        title: 'Poker Tournament',
+        buyInAmount: 20,
+        reBuyAmount: 20,
+        blindStructure: {
+          name: 'Regular',
+          levels: [
+            { id: 1, smallBlind: 5, bigBlind: 10, ante: 0, duration: 900 },
+            { id: 2, smallBlind: 10, bigBlind: 20, ante: 0, duration: 900 },
+          ],
+        },
+        prizeDistribution: {
+          type: 'percentage',
+          first: 60,
+          second: 30,
+          third: 10,
+        },
+      },
+      buyIns: 0,
+      reBuys: 0,
+      currentLevelId: 1,
+      isBlindChangeAlert: false,
+      isPanelOpen: false,
+    },
     currentLevel: {
       id: 1,
       smallBlind: 5,
@@ -50,7 +75,23 @@ vi.mock('@/hooks/useTournament', () => {
       ante: 0,
       duration: 900,
     },
+    prizePool: 0,
+    prizes: { first: 0, second: 0, third: 0 },
     advanceToNextLevel: vi.fn(),
+    updateSettings: vi.fn(),
+    updateBlindStructure: vi.fn(),
+    addBuyIn: vi.fn(),
+    removeBuyIn: vi.fn(),
+    addReBuy: vi.fn(),
+    removeReBuy: vi.fn(),
+    resetTournament: vi.fn(),
+    toggleSettingsPanel: vi.fn(),
+    dismissAlert: vi.fn(),
+    updatePrizeDistribution: vi.fn(),
+    updateCustomBlindStructure: vi.fn(),
+    addBlindLevel: vi.fn(),
+    removeBlindLevel: vi.fn(),
+    updateBlindLevel: vi.fn(),
   }));
 
   return {
@@ -168,6 +209,31 @@ describe('Timer', () => {
         addTime: vi.fn(),
         formatTime: vi.fn((seconds) => `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`),
       },
+      tournament: {
+        settings: {
+          title: 'Poker Tournament',
+          buyInAmount: 20,
+          reBuyAmount: 20,
+          blindStructure: {
+            name: 'Regular',
+            levels: [
+              { id: 1, smallBlind: 5, bigBlind: 10, ante: 0, duration: 900 },
+              { id: 2, smallBlind: 10, bigBlind: 20, ante: 0, duration: 900 },
+            ],
+          },
+          prizeDistribution: {
+            type: 'percentage',
+            first: 60,
+            second: 30,
+            third: 10,
+          },
+        },
+        buyIns: 0,
+        reBuys: 0,
+        currentLevelId: 1,
+        isBlindChangeAlert: false,
+        isPanelOpen: false,
+      },
       currentLevel: {
         id: 1,
         smallBlind: 5,
@@ -182,12 +248,28 @@ describe('Timer', () => {
         ante: 0,
         duration: 900,
       },
+      prizePool: 0,
+      prizes: { first: 0, second: 0, third: 0 },
       advanceToNextLevel: advanceToNextLevelMock.mockImplementation(() => {
         // When advanceToNextLevel is called, we simulate the behavior
         // by calling reset and then start
         timerResetMock(900);
         timerStartMock();
       }),
+      updateSettings: vi.fn(),
+      updateBlindStructure: vi.fn(),
+      addBuyIn: vi.fn(),
+      removeBuyIn: vi.fn(),
+      addReBuy: vi.fn(),
+      removeReBuy: vi.fn(),
+      resetTournament: vi.fn(),
+      toggleSettingsPanel: vi.fn(),
+      dismissAlert: vi.fn(),
+      updatePrizeDistribution: vi.fn(),
+      updateCustomBlindStructure: vi.fn(),
+      addBlindLevel: vi.fn(),
+      removeBlindLevel: vi.fn(),
+      updateBlindLevel: vi.fn(),
     }));
 
     render(
