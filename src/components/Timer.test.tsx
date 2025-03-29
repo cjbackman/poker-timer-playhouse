@@ -1,4 +1,3 @@
-
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { TournamentProvider, useTournament } from '@/hooks/useTournament';
@@ -34,6 +33,8 @@ vi.mock('@/hooks/useTournament', () => {
       pause: vi.fn(),
       resume: vi.fn(),
       reset: vi.fn(),
+      addTime: vi.fn(),
+      formatTime: vi.fn((seconds) => `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`),
     },
     currentLevel: {
       id: 1,
@@ -164,6 +165,8 @@ describe('Timer', () => {
         pause: vi.fn(),
         resume: vi.fn(),
         reset: timerResetMock,
+        addTime: vi.fn(),
+        formatTime: vi.fn((seconds) => `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`),
       },
       currentLevel: {
         id: 1,
