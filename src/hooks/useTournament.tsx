@@ -322,6 +322,9 @@ export const TournamentProvider = ({ children }: { children: ReactNode }) => {
       // Reset the timer to the new level's duration
       timer.reset(nextLevel.duration);
       
+      // Start the timer automatically after advancing to the next level
+      timer.start();
+      
       // Play a notification sound
       playNotificationSound();
       
