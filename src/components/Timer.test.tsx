@@ -1,7 +1,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { TournamentProvider } from '@/hooks/useTournament';
+import { TournamentProvider, useTournament } from '@/hooks/useTournament';
 import Timer from './Timer';
 import * as audioModule from '@/lib/audio';
 import { act } from '@testing-library/react';
