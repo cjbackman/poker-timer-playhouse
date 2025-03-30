@@ -2,7 +2,7 @@
 
 A professional poker tournament timer and management application.
 
-- [Demo](https://poker-timer-playhouse.lovable.app)
+- [Demo](https://cjbackman.github.io/poker-timer-playhouse)
 
 ## Usage
 
