@@ -25,7 +25,7 @@ const Layout = ({ children }: LayoutProps) => {
       {/* Footer */}
       <footer className="w-full py-3 border-t text-center text-sm text-muted-foreground">
         <p>
-          Poker Clock Web App — <span className="opacity-60">Level {tournament.currentLevelId} of {tournament.settings.blindStructure.levels.length}</span>
+          <span className="opacity-60">Level {tournament.currentLevelId} of {tournament.settings.blindStructure.levels.length}</span>
         </p>
       </footer>
     </div>
