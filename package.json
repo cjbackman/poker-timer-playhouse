@@ -11,7 +11,8 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "deploy": "node scripts/deploy.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
