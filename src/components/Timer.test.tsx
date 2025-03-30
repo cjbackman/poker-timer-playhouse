@@ -220,17 +220,43 @@ describe('Timer', () => {
             third: 10,
           },
         },
-        // Fix here: change 'currentLevel' to 'currentLevelId'
         currentLevelId: 1,
-        nextLevel: {
-          id: 2,
-          smallBlind: 10,
-          bigBlind: 20,
-          ante: 0,
-          duration: 900,
-        },
-        advanceToNextLevel: advanceToNextLevelMock,
+        buyIns: 0,
+        reBuys: 0,
+        isBlindChangeAlert: false,
+        isPanelOpen: false,
       },
+      currentLevel: {
+        id: 1,
+        smallBlind: 5,
+        bigBlind: 10,
+        ante: 0,
+        duration: 900,
+      },
+      nextLevel: {
+        id: 2,
+        smallBlind: 10,
+        bigBlind: 20,
+        ante: 0,
+        duration: 900,
+      },
+      advanceToNextLevel: advanceToNextLevelMock,
+      prizePool: 0,
+      prizes: { first: 0, second: 0, third: 0 },
+      updateSettings: vi.fn(),
+      updateBlindStructure: vi.fn(),
+      addBuyIn: vi.fn(),
+      removeBuyIn: vi.fn(),
+      addReBuy: vi.fn(),
+      removeReBuy: vi.fn(),
+      resetTournament: vi.fn(),
+      toggleSettingsPanel: vi.fn(),
+      dismissAlert: vi.fn(),
+      updatePrizeDistribution: vi.fn(),
+      updateCustomBlindStructure: vi.fn(),
+      addBlindLevel: vi.fn(),
+      removeBlindLevel: vi.fn(),
+      updateBlindLevel: vi.fn(),
     }));
 
     render(
@@ -257,3 +283,4 @@ describe('Timer', () => {
     vi.useRealTimers();
   });
 });
+
