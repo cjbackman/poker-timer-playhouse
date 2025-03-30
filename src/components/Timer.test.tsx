@@ -220,13 +220,8 @@ describe('Timer', () => {
             third: 10,
           },
         },
-        currentLevel: {
-          id: 1,
-          smallBlind: 5,
-          bigBlind: 10,
-          ante: 0,
-          duration: 900,
-        },
+        // Fix here: change 'currentLevel' to 'currentLevelId'
+        currentLevelId: 1,
         nextLevel: {
           id: 2,
           smallBlind: 10,
