@@ -44,7 +44,6 @@ This application is built with Vite, React, TypeScript, and Tailwind CSS. Here's
 ## Install
 
 ```sh
-# Install dependencies
 npm i
 ```
 
@@ -72,6 +71,5 @@ Test files are co-located with the source files they test, using the `.test.tsx`
 ## Run
 
 ```sh
-# Run dev server
 npm run dev
 ```
