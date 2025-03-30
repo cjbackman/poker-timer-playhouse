@@ -14,7 +14,7 @@ export type BlindStructure = {
 
 // Predefined blind structures
 export const blindStructures: { [key: string]: BlindStructure } = {
-  slow: {
+  regular: {
     name: "Juldagspokern",
     levels: [
       { id: 1, smallBlind: 10, bigBlind: 25, ante: 0, duration: 1200 },
@@ -39,41 +39,6 @@ export const blindStructures: { [key: string]: BlindStructure } = {
       { id: 20, smallBlind: 20000, bigBlind: 40000, ante: 0, duration: 1200 },
     ],
   },
-  regular: {
-    name: "Standard Tournament",
-    levels: [
-      { id: 1, smallBlind: 5, bigBlind: 10, ante: 0, duration: 900 },
-      { id: 2, smallBlind: 10, bigBlind: 20, ante: 0, duration: 900 },
-      { id: 3, smallBlind: 15, bigBlind: 30, ante: 0, duration: 900 },
-      { id: 4, smallBlind: 25, bigBlind: 50, ante: 0, duration: 900 },
-      { id: 5, smallBlind: 50, bigBlind: 100, ante: 0, duration: 900 },
-      { id: 6, smallBlind: 75, bigBlind: 150, ante: 0, duration: 900 },
-      { id: 7, smallBlind: 100, bigBlind: 200, ante: 0, duration: 900 },
-      { id: 8, smallBlind: 150, bigBlind: 300, ante: 0, duration: 900 },
-      { id: 9, smallBlind: 200, bigBlind: 400, ante: 0, duration: 900 },
-      { id: 10, smallBlind: 300, bigBlind: 600, ante: 0, duration: 900 },
-      { id: 11, smallBlind: 400, bigBlind: 800, ante: 0, duration: 900 },
-      { id: 12, smallBlind: 500, bigBlind: 1000, ante: 0, duration: 900 },
-      { id: 13, smallBlind: 700, bigBlind: 1400, ante: 0, duration: 900 },
-      { id: 14, smallBlind: 1000, bigBlind: 2000, ante: 0, duration: 900 },
-      { id: 15, smallBlind: 1500, bigBlind: 3000, ante: 0, duration: 900 },
-    ],
-  },
-  fast: {
-    name: "Turbo Tournament",
-    levels: [
-      { id: 1, smallBlind: 10, bigBlind: 20, ante: 0, duration: 600 },
-      { id: 2, smallBlind: 20, bigBlind: 40, ante: 0, duration: 600 },
-      { id: 3, smallBlind: 30, bigBlind: 60, ante: 0, duration: 600 },
-      { id: 4, smallBlind: 50, bigBlind: 100, ante: 0, duration: 600 },
-      { id: 5, smallBlind: 75, bigBlind: 150, ante: 0, duration: 600 },
-      { id: 6, smallBlind: 100, bigBlind: 200, ante: 0, duration: 600 },
-      { id: 7, smallBlind: 150, bigBlind: 300, ante: 0, duration: 600 },
-      { id: 8, smallBlind: 200, bigBlind: 400, ante: 0, duration: 600 },
-      { id: 9, smallBlind: 300, bigBlind: 600, ante: 0, duration: 600 },
-      { id: 10, smallBlind: 500, bigBlind: 1000, ante: 0, duration: 600 },
-    ],
-  }
 };
 
 // Helper function to get the next blind level
