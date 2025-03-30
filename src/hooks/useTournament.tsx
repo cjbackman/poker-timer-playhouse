@@ -68,14 +68,14 @@ export interface TournamentContextValue {
 // Default settings
 const defaultSettings: TournamentSettings = {
   title: 'Poker Tournament',
-  buyInAmount: 20,
-  reBuyAmount: 20,
+  buyInAmount: 400,
+  reBuyAmount: 400,
   blindStructure: blindStructures.regular,
   prizeDistribution: {
     type: 'percentage',
-    first: 60,
-    second: 30,
-    third: 10,
+    first: 50,
+    second: 35,
+    third: 15,
   },
 };
 
